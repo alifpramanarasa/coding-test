@@ -1,2 +1,8 @@
 fastapi
 uvicorn
+requests
+pytest
+openai
+pydantic
+pydantic-settings
+python-dotenv
