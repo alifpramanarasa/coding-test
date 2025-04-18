@@ -86,9 +86,6 @@ export function SalesRepsTable() {
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>Sales Representatives</CardTitle>
-        </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">

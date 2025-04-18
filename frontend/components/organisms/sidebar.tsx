@@ -1,15 +1,14 @@
 'use client';
 
 import { Button } from '../atoms/button';
-import { BarChart3, Users, MessageSquare, Settings } from 'lucide-react';
+import { BarChart3, Users, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const navigation = [
   { name: 'Overview', href: '/dashboard', icon: BarChart3 },
   { name: 'Sales Reps', href: '/dashboard/reps', icon: Users },
-  { name: 'AI Assistant', href: '/dashboard/ai-assistant', icon: MessageSquare },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'AI Assistant', href: '/dashboard/ai-assistant', icon: MessageSquare }
 ];
 
 export function Sidebar() {

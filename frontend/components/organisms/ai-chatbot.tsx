@@ -102,9 +102,6 @@ export function AIChatbot() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Smart Sales Assistant</CardTitle>
-      </CardHeader>
       <CardContent>
         <div className="flex h-[800px] flex-col">
           <div className="flex-1 overflow-y-auto space-y-4 p-4">
