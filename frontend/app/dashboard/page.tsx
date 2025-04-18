@@ -1,5 +1,8 @@
+'use client';
+
 import { DashboardLayout } from '../../components/templates/dashboard-layout';
 import { SalesMetricsSection } from '../../components/organisms/sales-metrics-section';
+import { MetricsCharts } from '../../components/organisms/metrics-charts';
 import { useEffect, useState } from 'react';
 
 interface Metric {
@@ -9,20 +12,45 @@ interface Metric {
   description: string;
 }
 
+interface RevenueTrendData {
+  month: string;
+  revenue: number;
+}
+
+interface DealDistributionData {
+  [key: string]: number;
+}
+
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<Metric[]>([]);
+  const [revenueTrend, setRevenueTrend] = useState<RevenueTrendData[]>([]);
+  const [dealDistribution, setDealDistribution] = useState<DealDistributionData>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchMetrics = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/metrics/dashboard');
-        if (!response.ok) {
-          throw new Error('Failed to fetch metrics');
+        setLoading(true);
+        const [metricsResponse, revenueResponse, distributionResponse] = await Promise.all([
+          fetch('http://localhost:8000/api/metrics/dashboard'),
+          fetch('http://localhost:8000/api/metrics/revenue-trend'),
+          fetch('http://localhost:8000/api/metrics/deal-distribution')
+        ]);
+
+        if (!metricsResponse.ok || !revenueResponse.ok || !distributionResponse.ok) {
+          throw new Error('Failed to fetch metrics data');
         }
-        const data = await response.json();
-        setMetrics(data.data);
+
+        const [metricsData, revenueData, distributionData] = await Promise.all([
+          metricsResponse.json(),
+          revenueResponse.json(),
+          distributionResponse.json()
+        ]);
+
+        setMetrics(metricsData.data);
+        setRevenueTrend(revenueData.data);
+        setDealDistribution(distributionData.data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
@@ -30,7 +58,7 @@ export default function DashboardPage() {
       }
     };
 
-    fetchMetrics();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -57,9 +85,13 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-4">
+      <div className="space-y-8">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <SalesMetricsSection metrics={metrics} />
+        <MetricsCharts 
+          revenueTrend={revenueTrend}
+          dealDistribution={dealDistribution}
+        />
       </div>
     </DashboardLayout>
   );

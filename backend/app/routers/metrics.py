@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from typing import List, Dict
+from typing import List, Dict, Any
 from app.schemas.responses import SuccessResponse
 from app.schemas.metrics import Metric
 from app.data.dummy_data import load_sales_reps_data
@@ -78,7 +78,7 @@ def get_dashboard_metrics():
         data=metrics
     )
 
-@router.get("/revenue-trend", response_model=SuccessResponse[List[Dict[str, any]]])
+@router.get("/revenue-trend", response_model=SuccessResponse[List[Dict[str, Any]]])
 def get_revenue_trend():
     """
     Returns the monthly revenue trend data for the last 6 months.
