@@ -1,39 +1,65 @@
 import { DashboardLayout } from '../../components/templates/dashboard-layout';
 import { SalesMetricsSection } from '../../components/organisms/sales-metrics-section';
+import { useEffect, useState } from 'react';
 
-const mockMetrics = [
-  {
-    title: 'Total Revenue',
-    value: '$45,231.89',
-    change: 20.1,
-    description: 'From last month',
-  },
-  {
-    title: 'Active Deals',
-    value: '12',
-    change: -5.2,
-    description: 'From last month',
-  },
-  {
-    title: 'Conversion Rate',
-    value: '3.2%',
-    change: 12.5,
-    description: 'From last month',
-  },
-  {
-    title: 'Avg. Deal Size',
-    value: '$3,769.32',
-    change: 8.3,
-    description: 'From last month',
-  },
-];
+interface Metric {
+  title: string;
+  value: string;
+  change: number;
+  description: string;
+}
 
 export default function DashboardPage() {
+  const [metrics, setMetrics] = useState<Metric[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMetrics = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/metrics/dashboard');
+        if (!response.ok) {
+          throw new Error('Failed to fetch metrics');
+        }
+        const data = await response.json();
+        setMetrics(data.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMetrics();
+  }, []);
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-4">
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <div>Loading...</div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-4">
+          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+          <div className="text-red-500">Error: {error}</div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-4">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-        <SalesMetricsSection metrics={mockMetrics} />
+        <SalesMetricsSection metrics={metrics} />
       </div>
     </DashboardLayout>
   );

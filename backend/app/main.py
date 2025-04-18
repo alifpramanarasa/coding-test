@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
-from app.routers import sales, ai, general
+from app.routers import sales, ai, general, metrics
 from app.schemas.responses import SuccessResponse
 import uvicorn
 
@@ -37,6 +37,7 @@ def create_app() -> FastAPI:
     app.include_router(general.router)
     app.include_router(sales.router)
     app.include_router(ai.router)
+    app.include_router(metrics.router)
 
     return app
 

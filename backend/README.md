@@ -102,6 +102,9 @@ pytest
 ### AI
 - Endpoints for AI interactions with multiple providers
 
+### Metrics
+- Endpoints for metrics retrieval
+
 ## Environment Variables
 
 Required environment variables (see `.env.example`):
